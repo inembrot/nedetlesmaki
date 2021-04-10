@@ -21,35 +21,37 @@
  */
 package org.geekygoblin.nedetlesmaki.core.components.gamesystems;
 
-import com.artemis.Component;
+import org.geekygoblin.nedetlesmaki.core.constants.ColorType;
 
 /**
  *
  * @author natir
  */
-public class Plate extends Component {
+public class Plate {
 
-    private boolean b;
     private boolean maki;
+    private ColorType c;
 
-    public Plate(boolean b, boolean maki) {
-	this.b = b;
+    public Plate(boolean maki, ColorType c) {
         this.maki = maki;
+        this.c = c;
     }
 
-    public boolean isPlate() {
-	return b;
-    }
-
-    public void setPlate(boolean b) {
-	this.b = b;
-    }
-    
     public boolean haveMaki() {
         return maki;
     }
 
-    public void setMaki(boolean b) {
-	this.maki = b;
+    public boolean setMaki(boolean b) {
+        this.maki = b;
+
+        return b;
+    }
+
+    public ColorType getColorType() {
+        return c;
+    }
+
+    public void setColorType(ColorType c) {
+        this.c = c;
     }
 }

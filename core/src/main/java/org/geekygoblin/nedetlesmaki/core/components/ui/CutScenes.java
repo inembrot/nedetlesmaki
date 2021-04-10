@@ -47,8 +47,8 @@ public class CutScenes {
 
     public void createCredits(NedDialogue dialog) {
         assets.clearUseless();
-        IAnimationCollection animations = assets.getAnimations("devnewton.json");
-        IAnimationCollection natir_credit = assets.getAnimations("natir.json");
+        IAnimationCollection animations = assets.getAnimations("animation/devnewton/devnewton.json");
+        IAnimationCollection natir_credit = assets.getAnimations("animation/natir/natir.json");
         dialog.setBackground(new ColoredBackground(0, 0, 0, 1));
         dialog.addTirade(animations.getAnimationByName("devnewton").start(PlayMode.ONCE), (VirtualResolution.WIDTH - 512) / 2, (VirtualResolution.HEIGHT - 128) / 2, 512, 128, "dialog.credits.devnewton");
         dialog.addTirade(natir_credit.getAnimationByName("natir").start(PlayMode.ONCE), (VirtualResolution.WIDTH - 600) / 2, (VirtualResolution.HEIGHT - 360) / 2, 600, 360, "dialog.credits.natir");
@@ -56,7 +56,7 @@ public class CutScenes {
 
     public void createIntro(NedDialogue dialog) {
         assets.clearUseless();
-        IAnimationCollection animations = assets.getAnimations("intro.json");
+        IAnimationCollection animations = assets.getAnimations("animation/intro/intro.json");
         dialog.addTirade(animations.getAnimationByName("01").start(PlayMode.LOOP), "dialog.intro.01");
         dialog.addTirade(animations.getAnimationByName("02").start(PlayMode.LOOP), "dialog.intro.02");
         dialog.addTirade(animations.getAnimationByName("03").start(PlayMode.LOOP), "dialog.intro.03");
@@ -67,37 +67,5 @@ public class CutScenes {
         dialog.addTirade(animations.getAnimationByName("08").start(PlayMode.LOOP), "dialog.intro.08");
         dialog.addTirade(animations.getAnimationByName("09").start(PlayMode.LOOP), "dialog.intro.09");
         dialog.addTirade(animations.getAnimationByName("10").start(PlayMode.LOOP), "dialog.intro.10");
-        /*Entity intro = game.createEntity();
-         intro.addComponent(dialog);
-         intro.addComponent(new ZOrder(ZOrders.DIALOG));
-         intro.addComponent(new TriggerableWhenRemoved(afterIntroTrigger).add(new Trigger() {
-
-         @Override
-         public void process(Game game) {
-
-         assets.forceAnimationUnload("intro.json");
-         }
-         }));
-         game.addEntity(intro);
-         game.addEntity(game.createEntity().addComponent(new Triggerable(new ShowCutScenesTrigger(intro))));*/
     }
-
-    /* class ShowCutScenesTrigger extends Trigger {
-
-     private final Entity cutscene;
-
-     private ShowCutScenesTrigger(Entity cutscene) {
-     this.cutscene = cutscene;
-     }
-
-     @Override
-     public void process(Game game) {
-     mainMenu.getComponent(MainMenu.class).show();
-     mainMenu.disable();
-     ingameControls.disable();
-     cutscene.enable();
-     cutscene.getComponent(DialogComponent.class).rewind();
-     }
-
-     }*/
 }

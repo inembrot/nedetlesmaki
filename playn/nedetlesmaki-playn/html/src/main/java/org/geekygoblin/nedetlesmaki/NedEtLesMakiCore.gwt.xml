@@ -1,7 +1,0 @@
-<module>
-    <inherits name='im.bci.TmxLoader'/>
-    <inherits name='im.bci.Jnuit'/>
-    <inherits name='com.artemis.backends.artemis_backends_gwt'/>
-    <inherits name='javax.Inject'/>
-    <source path='core'/>
-</module>

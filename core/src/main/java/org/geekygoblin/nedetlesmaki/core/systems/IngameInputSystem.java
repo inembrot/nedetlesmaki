@@ -40,14 +40,13 @@ import im.bci.jnuit.controls.ActionActivatedDetector;
 import org.geekygoblin.nedetlesmaki.core.NedGame;
 import org.geekygoblin.nedetlesmaki.core.IDefaultControls;
 import org.geekygoblin.nedetlesmaki.core.components.Triggerable;
+import org.geekygoblin.nedetlesmaki.core.components.gamesystems.Ned;
 import org.geekygoblin.nedetlesmaki.core.events.ShowMenuTrigger;
 import org.geekygoblin.nedetlesmaki.core.components.IngameControls;
-import org.geekygoblin.nedetlesmaki.core.manager.EntityIndexManager;
-import org.geekygoblin.nedetlesmaki.core.components.gamesystems.Position;
+import org.geekygoblin.nedetlesmaki.core.backend.Position;
 import org.geekygoblin.nedetlesmaki.core.components.ui.InGameUI;
 import org.geekygoblin.nedetlesmaki.core.events.IStartGameTrigger;
 import org.geekygoblin.nedetlesmaki.core.events.ShowLevelMenuTrigger;
-import org.geekygoblin.nedetlesmaki.core.utils.MoveStory;
 
 import pythagoras.f.Vector3;
 
@@ -60,19 +59,16 @@ public class IngameInputSystem extends EntityProcessingSystem {
 
     private final Provider<ShowMenuTrigger> showMenuTrigger;
     private final Provider<IStartGameTrigger> startGameTrigger;
-    private final GameSystem gameSystem;
     private final ActionActivatedDetector mouseClick;
-    private final MoveStory moveStory;
 
     private ComponentMapper<Sprite> spriteMapper;
+    private ComponentMapper<Ned> nedMapper;
     private final InGameUI inGameUI;
 
     @Inject
-    public IngameInputSystem(Provider<ShowMenuTrigger> showMenuTrigger, Provider<ShowLevelMenuTrigger> showLevelMenuTrigger, Provider<IStartGameTrigger> startGameTrigger, EntityIndexManager indexSystem, MoveStory moveStory, GameSystem gameSystem, IDefaultControls defaultControls, InGameUI inGameUI) {
+    public IngameInputSystem(Provider<ShowMenuTrigger> showMenuTrigger, Provider<ShowLevelMenuTrigger> showLevelMenuTrigger, Provider<IStartGameTrigger> startGameTrigger, IDefaultControls defaultControls, InGameUI inGameUI) {
         super(Aspect.getAspectForAll(IngameControls.class));
         this.showMenuTrigger = showMenuTrigger;
-        this.gameSystem = gameSystem;
-        this.moveStory = moveStory;
         this.mouseClick = new ActionActivatedDetector(new Action("click", defaultControls.getMouseClickControls()));
         this.inGameUI = inGameUI;
         this.startGameTrigger = startGameTrigger;
@@ -81,6 +77,7 @@ public class IngameInputSystem extends EntityProcessingSystem {
     @Override
     protected void initialize() {
         spriteMapper = world.getMapper(Sprite.class);
+        nedMapper = world.getMapper(Ned.class);
     }
 
     @Override
@@ -95,8 +92,13 @@ public class IngameInputSystem extends EntityProcessingSystem {
             }
             if (canMoveNed()) {
                 Entity ned = game.getNed();
+
+                if (this.nedMapper.getSafe(ned).isEnd()) {
+                    world.addEntity(world.createEntity().addComponent(new Triggerable(showMenuTrigger.get())));
+                }
+
                 if (controls.getRewind().isPressed() || inGameUI.getRewind().pollActivation()) {
-                    gameSystem.removeMouv();
+                    this.nedMapper.getSafe(ned).undo();
                     ned.changedInWorld();
                 } else if (inGameUI.getReset().pollActivation()) {
                     game.addEntity(world.createEntity().addComponent(new Triggerable(startGameTrigger.get().withLevelName(game.getCurrentLevel()))));
@@ -138,16 +140,16 @@ public class IngameInputSystem extends EntityProcessingSystem {
                         }
                     }
                     if (upPressed) {
-                        moveStory.addMouvement(gameSystem.moveEntity(ned, new Position(0, -1), 0, false));
+                        this.nedMapper.getSafe(ned).moveTo(Position.getUp(), 0.0f);
                         ned.changedInWorld();
                     } else if (downPressed) {
-                        moveStory.addMouvement(gameSystem.moveEntity(ned, new Position(0, 1), 0, false));
+                        this.nedMapper.getSafe(ned).moveTo(Position.getDown(), 0.0f);
                         ned.changedInWorld();
                     } else if (leftPressed) {
-                        moveStory.addMouvement(gameSystem.moveEntity(ned, new Position(-1, 0), 0, false));
+                        this.nedMapper.getSafe(ned).moveTo(Position.getLeft(), 0.0f);
                         ned.changedInWorld();
                     } else if (rightPressed) {
-                        moveStory.addMouvement(gameSystem.moveEntity(ned, new Position(1, 0), 0, false));
+                        this.nedMapper.getSafe(ned).moveTo(Position.getRight(), 0.0f);
                         ned.changedInWorld();
                     }
                 }

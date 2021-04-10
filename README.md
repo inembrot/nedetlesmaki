@@ -1,13 +1,18 @@
-# Ned et les maki
+Ned et les maki
+===============
 
-[![build status](http://gitlabci.pierre.marijon.fr/projects/5/status.png?ref=master)](http://gitlabci.pierre.marijon.fr/projects/5?ref=master)
+Ned et les maki is an opensource puzzle game with isometric 3d graphics inspired by Sokoban.
 
-## Branch
+[Official site](http://en.geekygoblin.org/ned-et-les-maki)
 
-master branch is in developement, not stable.
+[Build instructions](INSTALL.md)
 
-Branch v0.2 is the last stable version.
+![Screenshot](assets/menu.png)
 
-## Bug report
+Bug report
+----------
 
 For bug report, you can login in http://dev.geekygoblin.org with username : anonymous and password : anonymous
+
+[![build status](http://strider.pierre.marijon.fr/ned-et-les-maki/ned-et-les-maki/badge)](http://strider.pierre.marijon.fr/ned-et-les-maki/ned-et-les-maki/badge)
+

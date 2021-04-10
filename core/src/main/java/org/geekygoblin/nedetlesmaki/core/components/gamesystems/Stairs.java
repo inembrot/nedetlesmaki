@@ -1,55 +1,100 @@
 /*
- * Copyright © 2013, Pierre Marijon <pierre@marijon.fr>
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
- * copies of the Software, and to permit persons to whom the Software is 
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in 
- * all copies or substantial portions of the Software.
- *
- * The Software is provided "as is", without warranty of any kind, express or 
- * implied, including but not limited to the warranties of merchantability, 
- * fitness for a particular purpose and noninfringement. In no event shall the 
- * authors or copyright holders X be liable for any claim, damages or other 
- * liability, whether in an action of contract, tort or otherwise, arising from,
- * out of or in connection with the software or the use or other dealings in the
- * Software.
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package org.geekygoblin.nedetlesmaki.core.components.gamesystems;
 
-import com.artemis.Component;
+import com.artemis.Entity;
+import im.bci.jnuit.animation.IAnimationCollection;
+import im.bci.jnuit.animation.PlayMode;
+import im.bci.jnuit.artemis.sprite.Sprite;
+import im.bci.jnuit.artemis.sprite.SpritePuppetControls;
+import org.geekygoblin.nedetlesmaki.core.IAssets;
+import org.geekygoblin.nedetlesmaki.core.backend.LevelIndex;
+import org.geekygoblin.nedetlesmaki.core.backend.Position;
+import org.geekygoblin.nedetlesmaki.core.backend.PositionIndexed;
 
 /**
  *
- * @author natir
+ * @author pierre
  */
-public class Stairs extends Component {
+public class Stairs extends GameObject {
 
+    private Position dir;
     private boolean open;
-    private int dir;
-    
-    public Stairs(boolean o, int dir) {
-	this.open = o;
-                  this.dir = dir;
+    private final IAnimationCollection animation;
+
+    public Stairs(PositionIndexed pos, Entity entity, LevelIndex index, IAssets assets, boolean open, Position dir) {
+        super(pos, entity, index);
+        this.open = open;
+        this.animation = assets.getAnimations("animation/stairs/stairs.json");
+        this.dir = dir;
+    }
+
+    @Override
+    public Position moveTo(Position diff, float wait_time) {
+        return this.pos;
+    }
+
+    @Override
+    public void undo() {
+    }
+
+    public Position getDir() {
+        return dir;
+    }
+
+    public void setDir(Position dir) {
+        this.dir = dir;
     }
 
     public boolean isOpen() {
-	return open;
+        return open;
     }
 
-    public void setStairs(boolean b) {
-	this.open = b;
+    public void setOpen(boolean open) {
+        this.open = open;
+
+        if (open) {
+            this.run_animation(MoveType.OPEN);
+        } else {
+            this.run_animation(MoveType.CLOSE);
+        }
     }
-    
-    public int getDir() { // 1 = Up, 2 = Down, 3 = Leftt, 4 = Right,
-                  return this.dir;
-    }
-    
-    public void setDir(int dir) {
-                  this.dir = dir;
+
+    private void run_animation(MoveType type) {
+        Sprite sprite = this.entity.getComponent(Sprite.class);
+        SpritePuppetControls updatable = this.entity.getComponent(SpritePuppetControls.class);
+
+        if (updatable
+                == null) {
+            updatable = new SpritePuppetControls(sprite);
+        }
+
+        if (type == MoveType.OPEN) {
+            if (dir.equals(Position.getUp())) {
+                updatable.startAnimation(this.animation.getAnimationByName("dark_stairs_up_open"), PlayMode.ONCE);
+            } else if (dir.equals(Position.getDown())) {
+                updatable.startAnimation(this.animation.getAnimationByName("dark_stairs_down_open"), PlayMode.ONCE);
+            } else if (dir.equals(Position.getLeft())) {
+                updatable.startAnimation(this.animation.getAnimationByName("dark_stairs_left_open"), PlayMode.ONCE);
+            } else if (dir.equals(Position.getRight())) {
+                updatable.startAnimation(this.animation.getAnimationByName("dark_stairs_right_open"), PlayMode.ONCE);
+            }
+        } else if (type == MoveType.CLOSE) {
+            if (dir.equals(Position.getUp())) {
+                updatable.startAnimation(this.animation.getAnimationByName("dark_stairs_up_close"), PlayMode.ONCE);
+            } else if (dir.equals(Position.getDown())) {
+                updatable.startAnimation(this.animation.getAnimationByName("dark_stairs_down_close"), PlayMode.ONCE);
+            } else if (dir.equals(Position.getLeft())) {
+                updatable.startAnimation(this.animation.getAnimationByName("dark_stairs_left_close"), PlayMode.ONCE);
+            } else if (dir.equals(Position.getRight())) {
+            }
+        }
+
+        this.entity.addComponent(updatable);
+
+        this.entity.changedInWorld();
     }
 }

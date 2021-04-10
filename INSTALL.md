@@ -2,47 +2,38 @@ Requirements
 ============
 
 Java JDK, [openjdk](http://openjdk.java.net/) or [Oracle](http://java.com): 1.7+
-[Maven](http://www.maven.org) 3+
+[Maven](http://www.maven.org) 3+,
+[bash](https://www.gnu.org/software/bash/) 4+
 
-Compile
-=======
+Build
+=====
 
-Go to the source folder and run maven with the following command:
+Go to the source folder and run the build.sh script using bash:
 
-	mvn package
-
-This will generate an executable jar in target subfolder named nedetlesmaki-game-${project.version}.jar
+	bash build.sh
 
 Install
 =======
 
-Manual installation
--------------------
+The build.sh script generate installers for various OS in the target/release subfolder. Use them to install the game.
 
-- Create a directory, for example /opt/nedetlesmaki-game
-- Copy the game/target/nedetlesmaki-game-${project.version}.jar, the game/target/natives, game/target/lib game/data folders into it.
+Run without install 
+===================
 
-Create packages and installers
-------------------------------
+Go to the source folder and run the play.sh script using bash:
 
-Using maven 3 plugins, rpm and deb can be generated and also a generic [izpack](www.izpack.org) based installer.
+        bash play.sh
 
-	mvn clean package -Pizpack,deb,rpm
+Develop, debug
+==============
 
-Run
-===
+Ned et les maki is maven based project, open it with Netbeans or Eclipse.
 
+Contribute
+==========
 
-The game can be run using the following command:
+Please contact us:
 
-	java -jar nedetlesmaki-game-${project.version}.jar
+- by mail: please.reply @ geekygoblin.org
+- using IRC: #GGP on freenode.net.
 
-It will try to load the game data files in
-
-	./data
-
-or
-
-	../data
-
-NB: lwjgl shared libraries must be loadable, check the [lwjgl](www.lwjgl.org) documentation for more information.
